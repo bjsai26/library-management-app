@@ -4,6 +4,8 @@ A library management REST API built on ASP.NET Core 10 with a three-layer archit
 
 Scope: full CRUD over Books and Categories, with JWT authentication and role-based authorization.
 
+[Quick start](#quick-start) · [Architecture](#architecture) · [Dependencies](#dependencies) · [API reference](#api-reference) · [Validation](#validation) · [Security](#security) · [Configuration](#configuration) · [Database](#database) · [Verification](#verification)
+
 ---
 
 ## Quick start
@@ -208,7 +210,7 @@ Validation happens in two places.
 }
 ```
 
-Rules applied: email format and 150-character limit, password strength (8–100 characters with upper, lower, digit and symbol), password confirmation match, full name 3–150 characters, title 1–250 characters, ISBN of exactly 10 or 13 digits, published year between 1450 and the current year, price 0–100,000, copies available 0–10,000, and positive author and category ids.
+Rules applied: email format and 150-character limit, password strength (8–100 characters with upper, lower, digit and symbol), password confirmation match, full name 3–150 characters, category name 2–100 characters, title 1–250 characters, ISBN of exactly 10 or 13 digits, published year between 1450 and 2100 with a second rule rejecting anything past the current year, price 0–100,000, copies available 0–10,000, and positive author and category ids.
 
 **Business rules** live in the services, since they need the database:
 
@@ -316,12 +318,12 @@ dotnet ef database drop --force \
 | `Categories` | Unique index on name |
 | `Books` | Unique index on ISBN; `decimal(18,2)` price; restrict-delete foreign keys to author and category |
 
-Every table carries `Id`, `CreatedAt` and `UpdatedAt` from `BaseEntity`. The timestamps are stamped automatically by an override in `AppDbContext.SaveChangesAsync`. Entity configuration is written inline in `OnModelCreating` rather than split across `IEntityTypeConfiguration` classes, which keeps the whole schema readable in one place at this size.
+Every table carries `Id`, `CreatedAt` and `UpdatedAt` from `BaseEntity`, stamped centrally as described above. Entity configuration is written inline in `OnModelCreating` rather than split across `IEntityTypeConfiguration` classes, which keeps the whole schema readable in one place at this size.
 
 ---
 
 ## Verification
 
-There is no automated test project in this solution. The API was exercised end to end against SQL Server 2022 with an external 55-check script — covering authentication, role enforcement on every write endpoint, full CRUD on Books and Categories, validation failures, paging and search, and the delete guards — and all 55 checks passed. That script is not committed here; Swagger UI is the intended way to reproduce the same checks by hand.
+No automated test project is included. Everything is verified by hand through Swagger UI: sign in as a seeded account, then walk the Books and Categories endpoints to check role enforcement on the writes, validation failures, paging and search, and the delete guards.
 
-Adding an xUnit project would be the natural next step: the services depend only on `IGenericRepository<T>`, so they are straightforward to unit test against a fake, with no EF Core or database involved.
+The services depend only on `IGenericRepository<T>`, so an xUnit project testing them against a fake repository — no EF Core, no database — is the natural next step.
