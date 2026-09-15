@@ -1,0 +1,32 @@
+## Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+
+## Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Test and coverage
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+*.coverage
+
+## Local configuration that should never be committed
+appsettings.Production.json
+appsettings.Local.json
+secrets.json
+
+## Misc
+*.log
+.DS_Store
+Thumbs.db
