@@ -27,6 +27,7 @@ public class ServiceResult
     public static ServiceResult Success(string message = "Request processed successfully.")
         => new() { Succeeded = true, Message = message };
 
+    /// <summary>A failed result. Defaults to Validation, which the API returns as 400.</summary>
     public static ServiceResult Fail(string message, ServiceError error = ServiceError.Validation)
         => new() { Succeeded = false, Message = message, Error = error };
 

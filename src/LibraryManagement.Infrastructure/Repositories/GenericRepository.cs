@@ -55,6 +55,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         Expression<Func<TEntity, object>>[]? includes = null,
         CancellationToken cancellationToken = default)
     {
+        // Tracked, unlike GetPagedAsync: this is what the write paths load before saving.
         IQueryable<TEntity> query = _dbSet;
 
         if (includes is not null)

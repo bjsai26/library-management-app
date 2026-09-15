@@ -18,6 +18,7 @@ public static class MappingExtensions
         BookCount = bookCount
     };
 
+    /// <summary>Copies the request onto the entity, trimmed. Id and timestamps are left alone.</summary>
     public static void ApplyTo(this CategoryRequest request, Category entity)
     {
         entity.Name = request.Name.Trim();
@@ -42,6 +43,7 @@ public static class MappingExtensions
         UpdatedAt = entity.UpdatedAt
     };
 
+    /// <summary>Copies the request onto the entity, trimmed. Id and timestamps are left alone.</summary>
     public static void ApplyTo(this BookRequest request, Book entity)
     {
         entity.Title = request.Title.Trim();
